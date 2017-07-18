@@ -1,0 +1,17 @@
+PYTHON_COMPILE_FLAGS = $(shell python3-config --cflags)
+PYTHON_LINK_FLAGS = $(shell python3-config --ldflags)
+PYTHON_EXTENSION_SUFFIX = $(shell python3-config --extension-suffix)
+PYBIND_FLAGS = -I/home/deep/pybind11/include
+
+ALL_FLAGS = $(PYBIND_FLAGS) $(PYTHON_COMPILE_FLAGS) $(PYTHON_LINK_FLAGS) 
+
+%$(PYTHON_EXTENSION_SUFFIX): %.cc
+	clang++-3.8 $< -o $@ $(ALL_FLAGS) -fPIC -shared -std=c++0x
+
+clean:
+	rm -f *$(PYTHON_EXTENSION_SUFFIX)
+	rm -f *.o
+	rm -f *.so
+	rm -f *~
+	rm -f *.cc
+	rm -rf __pycache__/
